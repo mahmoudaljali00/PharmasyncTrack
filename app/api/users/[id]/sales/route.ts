@@ -39,7 +39,7 @@ export async function GET(
     const message = error instanceof Error ? error.message : 'Error'
     if (message === 'UNAUTHORIZED') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     if (message === 'FORBIDDEN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    console.error('[v0] User sales error:', error)
+    console.error('[pharmasync-track] User sales error:', error)
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
   }
 }

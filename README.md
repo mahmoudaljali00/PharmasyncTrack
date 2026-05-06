@@ -1,4 +1,4 @@
-# MedSync Pro
+# pharmasync-track
 
 Modern pharmacy management system: products, point-of-sale, inventory, suppliers, customers, users, reports, and a fully-customizable Settings module. Bilingual (English / Arabic) with full RTL support.
 

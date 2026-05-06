@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     await clearSession(allDevices === true)
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('[v0] Logout error:', error)
+    console.error('[pharmasync-track] Logout error:', error)
     return NextResponse.json({ error: 'An error occurred during logout' }, { status: 500 })
   }
 }

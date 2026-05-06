@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* MedSync Pro - Healthcare teal/emerald theme */
+  /* pharmasync-track - Healthcare teal/emerald theme */
   --background: oklch(0.98 0.005 180);
   --foreground: oklch(0.15 0.02 240);
   --card: oklch(1 0 0);

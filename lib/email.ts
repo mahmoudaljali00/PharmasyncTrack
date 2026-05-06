@@ -7,7 +7,7 @@
  *   - RESEND_API_KEY     -> https://resend.com/api-keys
  *   - RESEND_FROM_EMAIL  -> a verified sender email (e.g. noreply@yourdomain.com)
  *                          For testing without a domain, use "onboarding@resend.dev".
- *   - RESEND_FROM_NAME   -> sender display name (defaults to "MedSync Pro")
+ *   - RESEND_FROM_NAME   -> sender display name (defaults to "pharmasync-track")
  *   - APP_URL            -> public app URL used to build the reset link
  */
 
@@ -28,15 +28,15 @@ export async function sendEmail({
 }: SendEmailParams): Promise<{ success: boolean; error?: string; id?: string }> {
   const apiKey = process.env.RESEND_API_KEY
   const senderEmail = process.env.RESEND_FROM_EMAIL
-  const senderName = process.env.RESEND_FROM_NAME || 'MedSync Pro'
+  const senderName = process.env.RESEND_FROM_NAME || 'pharmasync-track'
 
   if (!apiKey) {
-    console.error('[v0] RESEND_API_KEY is not set')
+    console.error('[pharmasync-track] RESEND_API_KEY is not set')
     return { success: false, error: 'Email service not configured' }
   }
 
   if (!senderEmail) {
-    console.error('[v0] RESEND_FROM_EMAIL is not set')
+    console.error('[pharmasync-track] RESEND_FROM_EMAIL is not set')
     return { success: false, error: 'Sender email not configured' }
   }
 
@@ -62,7 +62,7 @@ export async function sendEmail({
 
     if (!res.ok) {
       const body = await res.text()
-      console.error('[v0] Resend error:', res.status, body)
+      console.error('[pharmasync-track] Resend error:', res.status, body)
 
       // Try to parse Resend's structured error to surface a useful message
       let parsedMessage: string | undefined
@@ -100,7 +100,7 @@ export async function sendEmail({
     const data = (await res.json().catch(() => ({}))) as { id?: string }
     return { success: true, id: data.id }
   } catch (err) {
-    console.error('[v0] Resend request failed:', err)
+    console.error('[pharmasync-track] Resend request failed:', err)
     return { success: false, error: 'Email send failed (network error)' }
   }
 }
@@ -110,7 +110,7 @@ export async function sendPasswordResetEmail(
   name: string,
   resetUrl: string
 ): Promise<{ success: boolean; error?: string; id?: string }> {
-  const subject = 'Reset your MedSync Pro password'
+  const subject = 'Reset your pharmasync-track password'
 
   const htmlContent = `
 <!DOCTYPE html>
@@ -126,7 +126,7 @@ export async function sendPasswordResetEmail(
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
           <tr>
             <td style="background:#0d9488;padding:32px 32px 24px;text-align:center;">
-              <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:600;letter-spacing:-0.2px;">MedSync Pro</h1>
+              <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:600;letter-spacing:-0.2px;">pharmasync-track</h1>
             </td>
           </tr>
           <tr>
@@ -136,7 +136,7 @@ export async function sendPasswordResetEmail(
                 Hi ${escapeHtml(name)},
               </p>
               <p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.6;">
-                We received a request to reset the password for your MedSync Pro admin account. Click the button below to choose a new password. This link will expire in 30 minutes.
+                We received a request to reset the password for your pharmasync-track admin account. Click the button below to choose a new password. This link will expire in 30 minutes.
               </p>
               <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
                 <tr>
@@ -162,7 +162,7 @@ export async function sendPasswordResetEmail(
           <tr>
             <td style="padding:20px 32px;background:#f8fafc;text-align:center;">
               <p style="margin:0;color:#94a3b8;font-size:12px;">
-                &copy; ${new Date().getFullYear()} MedSync Pro. All rights reserved.
+                &copy; ${new Date().getFullYear()} pharmasync-track. All rights reserved.
               </p>
             </td>
           </tr>
@@ -176,14 +176,14 @@ export async function sendPasswordResetEmail(
 
   const textContent = `Hi ${name},
 
-We received a request to reset the password for your MedSync Pro admin account.
+We received a request to reset the password for your pharmasync-track admin account.
 
 Reset your password here (link expires in 30 minutes):
 ${resetUrl}
 
 If you didn't request this, you can safely ignore this email.
 
-- MedSync Pro`
+- pharmasync-track`
 
   return sendEmail({
     to,

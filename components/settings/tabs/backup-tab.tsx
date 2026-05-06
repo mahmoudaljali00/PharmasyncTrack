@@ -41,7 +41,7 @@ export function BackupTab({ settings, onPatch, saving }: TabProps) {
       URL.revokeObjectURL(url)
       toast.success('Backup downloaded')
     } catch (err) {
-      console.error('[v0] export failed:', err)
+      console.error('[pharmasync-track] export failed:', err)
       toast.error('Export failed')
     } finally {
       setExporting(false)
@@ -67,7 +67,7 @@ export function BackupTab({ settings, onPatch, saving }: TabProps) {
       // Reload page so all settings consumers refresh
       window.location.reload()
     } catch (err) {
-      console.error('[v0] restore failed:', err)
+      console.error('[pharmasync-track] restore failed:', err)
       toast.error('Invalid backup file')
     } finally {
       setRestoring(false)

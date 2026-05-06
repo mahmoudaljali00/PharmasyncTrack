@@ -27,7 +27,7 @@ export async function GET() {
     if (err instanceof Error && err.message === 'UNAUTHORIZED') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    console.error('[v0] GET /api/scanner-settings failed:', err)
+    console.error('[pharmasync-track] GET /api/scanner-settings failed:', err)
     return NextResponse.json({ error: 'Internal error' }, { status: 500 })
   }
 }
@@ -93,7 +93,7 @@ export async function PUT(request: Request) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       }
     }
-    console.error('[v0] PUT /api/scanner-settings failed:', err)
+    console.error('[pharmasync-track] PUT /api/scanner-settings failed:', err)
     return NextResponse.json({ error: 'Internal error' }, { status: 500 })
   }
 }
@@ -117,7 +117,7 @@ export async function PATCH(request: Request) {
     if (err instanceof Error && err.message === 'UNAUTHORIZED') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    console.error('[v0] PATCH /api/scanner-settings failed:', err)
+    console.error('[pharmasync-track] PATCH /api/scanner-settings failed:', err)
     return NextResponse.json({ error: 'Internal error' }, { status: 500 })
   }
 }

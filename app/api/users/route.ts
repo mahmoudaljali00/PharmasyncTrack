@@ -26,7 +26,7 @@ export async function GET() {
     const message = error instanceof Error ? error.message : 'Error'
     if (message === 'UNAUTHORIZED') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     if (message === 'FORBIDDEN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    console.error('[v0] Users GET error:', error)
+    console.error('[pharmasync-track] Users GET error:', error)
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
   }
 }
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
     const message = error instanceof Error ? error.message : 'Error'
     if (message === 'UNAUTHORIZED') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     if (message === 'FORBIDDEN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    console.error('[v0] Users POST error:', error)
+    console.error('[pharmasync-track] Users POST error:', error)
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
   }
 }

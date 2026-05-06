@@ -53,7 +53,7 @@ export function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
           setIsInitializing(false)
         }
       } catch (err) {
-        console.error('[v0] Scanner error:', err)
+        console.error('[pharmasync-track] Scanner error:', err)
         if (mounted) {
           setError('Camera not available. Use manual entry instead.')
           setIsInitializing(false)

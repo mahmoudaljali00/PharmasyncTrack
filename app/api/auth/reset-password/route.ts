@@ -34,7 +34,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: 'Password has been reset successfully' })
   } catch (error) {
-    console.error('[v0] Reset password error:', error)
+    console.error('[pharmasync-track] Reset password error:', error)
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
   }
 }

@@ -38,7 +38,7 @@ export function Barcode({
         lineColor: '#000000',
       })
     } catch (err) {
-      console.error('[v0] Barcode render failed:', err)
+      console.error('[pharmasync-track] Barcode render failed:', err)
     }
   }, [value, format, width, height, displayValue, fontSize])
 

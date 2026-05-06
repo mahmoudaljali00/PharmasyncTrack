@@ -87,7 +87,7 @@ export function SuppliersClient() {
         setSuppliers(data.suppliers)
       }
     } catch (err) {
-      console.error('[v0] Fetch suppliers error:', err)
+      console.error('[pharmasync-track] Fetch suppliers error:', err)
     } finally {
       setLoading(false)
     }

@@ -94,7 +94,7 @@ export async function POST(request: Request) {
     const emailResult = await sendPasswordResetEmail(user.email, user.name, resetUrl)
 
     if (!emailResult.success) {
-      console.error('[v0] Failed to send reset email:', emailResult.error)
+      console.error('[pharmasync-track] Failed to send reset email:', emailResult.error)
       return NextResponse.json(
         {
           error:
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
       email: user.email,
     })
   } catch (error) {
-    console.error('[v0] Forgot password error:', error)
+    console.error('[pharmasync-track] Forgot password error:', error)
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
   }
 }

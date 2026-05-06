@@ -31,7 +31,7 @@ type Ctx = {
 const SettingsContext = createContext<Ctx | null>(null)
 
 const FALLBACK: ClientSettings = {
-  pharmacy_name: 'MedSync Pro',
+  pharmacy_name: 'pharmasync-track',
   pharmacy_address: null,
   pharmacy_phone: null,
   pharmacy_email: null,

@@ -93,7 +93,7 @@ export default function LoginPage() {
             <Pill className="h-8 w-8 text-primary" />
           </div>
           <div>
-            <CardTitle className="text-2xl font-bold text-foreground">MedSync Pro</CardTitle>
+            <CardTitle className="text-2xl font-bold text-foreground">pharmasync-track</CardTitle>
             <CardDescription className="text-muted-foreground mt-1">
               {t('signInToAccount')}
             </CardDescription>

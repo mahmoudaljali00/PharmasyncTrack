@@ -76,7 +76,7 @@ export function PharmacyTab({ settings, onPatch, saving }: TabProps) {
         cloudinary_logo_public_id: upload.public_id,
       })
     } catch (err) {
-      console.error('[v0] logo upload error:', err)
+      console.error('[pharmasync-track] logo upload error:', err)
       toast.error('Upload failed')
     } finally {
       setUploading(false)

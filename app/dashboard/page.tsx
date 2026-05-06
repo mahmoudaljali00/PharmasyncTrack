@@ -84,13 +84,13 @@ async function getDashboardStats(): Promise<DashboardStats> {
       stats.expiringSoonCount = Number(row.expiring_soon ?? 0)
     }
   } else {
-    console.log('[v0] dashboard aggregate query failed:', aggResult.reason)
+    console.log('[pharmasync-track] dashboard aggregate query failed:', aggResult.reason)
   }
 
   if (recentResult.status === 'fulfilled') {
     stats.recentSales = recentResult.value as DashboardStats['recentSales']
   } else {
-    console.log('[v0] dashboard recent sales query failed:', recentResult.reason)
+    console.log('[pharmasync-track] dashboard recent sales query failed:', recentResult.reason)
   }
 
   return stats
@@ -101,7 +101,7 @@ export default async function DashboardPage() {
   try {
     stats = await getDashboardStats()
   } catch (err) {
-    console.log('[v0] dashboard render fallback after error:', err)
+    console.log('[pharmasync-track] dashboard render fallback after error:', err)
     stats = EMPTY_STATS
   }
 

@@ -1,4 +1,4 @@
--- MedSync Pro Database Schema
+-- pharmasync-track Database Schema
 -- Execute this script to set up all required tables
 
 -- Enable UUID extension
