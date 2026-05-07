@@ -55,7 +55,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     const message = error instanceof Error ? error.message : 'Error'
     if (message === 'UNAUTHORIZED') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     if (message === 'FORBIDDEN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    console.error('[pharmasync-track] Customer GET error:', error)
+    console.error('[v0] Customer GET error:', error)
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
   }
 }
@@ -104,7 +104,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const message = error instanceof Error ? error.message : 'Error'
     if (message === 'UNAUTHORIZED') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     if (message === 'FORBIDDEN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    console.error('[pharmasync-track] Customer PUT error:', error)
+    console.error('[v0] Customer PUT error:', error)
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
   }
 }
@@ -131,7 +131,7 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
     const message = error instanceof Error ? error.message : 'Error'
     if (message === 'UNAUTHORIZED') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     if (message === 'FORBIDDEN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    console.error('[pharmasync-track] Customer DELETE error:', error)
+    console.error('[v0] Customer DELETE error:', error)
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
   }
 }

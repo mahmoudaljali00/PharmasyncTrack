@@ -51,7 +51,7 @@ export function PrintingTab({ settings }: TabProps) {
       setBtConnected(true)
       toast.success(t('bluetoothConnected'))
     } catch (err) {
-      console.error('[pharmasync-track] Bluetooth connect failed:', err)
+      console.error('[v0] Bluetooth connect failed:', err)
       toast.error((err as Error).message || 'Failed to connect')
     } finally {
       setBtConnecting(false)
@@ -80,7 +80,7 @@ export function PrintingTab({ settings }: TabProps) {
       await printBytes(builder.build())
       toast.success('Test print sent')
     } catch (err) {
-      console.error('[pharmasync-track] test print failed:', err)
+      console.error('[v0] test print failed:', err)
       toast.error((err as Error).message || 'Failed to print')
     }
   }

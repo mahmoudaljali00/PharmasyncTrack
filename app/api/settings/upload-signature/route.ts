@@ -20,7 +20,7 @@ export async function POST() {
         { status: 503 }
       )
     }
-    console.error('[pharmasync-track] upload-signature failed:', err)
+    console.error('[v0] upload-signature failed:', err)
     return NextResponse.json({ error: 'Failed to create signature' }, { status: 500 })
   }
 }

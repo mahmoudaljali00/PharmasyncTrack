@@ -67,7 +67,7 @@ export async function GET() {
     if (err instanceof Error && err.message === 'FORBIDDEN') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
-    console.error('[pharmasync-track] backup export failed:', err)
+    console.error('[v0] backup export failed:', err)
     return NextResponse.json({ error: 'Backup export failed' }, { status: 500 })
   }
 }

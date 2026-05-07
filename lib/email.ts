@@ -31,12 +31,12 @@ export async function sendEmail({
   const senderName = process.env.RESEND_FROM_NAME || 'pharmasync-track'
 
   if (!apiKey) {
-    console.error('[pharmasync-track] RESEND_API_KEY is not set')
+    console.error('[v0] RESEND_API_KEY is not set')
     return { success: false, error: 'Email service not configured' }
   }
 
   if (!senderEmail) {
-    console.error('[pharmasync-track] RESEND_FROM_EMAIL is not set')
+    console.error('[v0] RESEND_FROM_EMAIL is not set')
     return { success: false, error: 'Sender email not configured' }
   }
 
@@ -62,7 +62,7 @@ export async function sendEmail({
 
     if (!res.ok) {
       const body = await res.text()
-      console.error('[pharmasync-track] Resend error:', res.status, body)
+      console.error('[v0] Resend error:', res.status, body)
 
       // Try to parse Resend's structured error to surface a useful message
       let parsedMessage: string | undefined
@@ -100,7 +100,7 @@ export async function sendEmail({
     const data = (await res.json().catch(() => ({}))) as { id?: string }
     return { success: true, id: data.id }
   } catch (err) {
-    console.error('[pharmasync-track] Resend request failed:', err)
+    console.error('[v0] Resend request failed:', err)
     return { success: false, error: 'Email send failed (network error)' }
   }
 }

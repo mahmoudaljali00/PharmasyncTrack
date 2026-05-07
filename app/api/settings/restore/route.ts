@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     if (err instanceof Error && err.message === 'FORBIDDEN') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
-    console.error('[pharmasync-track] backup restore failed:', err)
+    console.error('[v0] backup restore failed:', err)
     return NextResponse.json({ error: 'Restore failed' }, { status: 500 })
   }
 }

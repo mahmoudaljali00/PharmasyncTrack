@@ -89,7 +89,7 @@ export function UsersClient({ currentUserId }: { currentUserId: string }) {
         setUsers(data.users)
       }
     } catch (error) {
-      console.error('[pharmasync-track] Fetch users error:', error)
+      console.error('[v0] Fetch users error:', error)
     } finally {
       setLoading(false)
     }

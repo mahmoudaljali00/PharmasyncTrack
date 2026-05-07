@@ -34,7 +34,7 @@ export async function GET() {
     if (err instanceof Error && err.message === 'UNAUTHORIZED') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    console.error('[pharmasync-track] GET /api/settings/public failed:', err)
+    console.error('[v0] GET /api/settings/public failed:', err)
     return NextResponse.json({ error: 'Internal error' }, { status: 500 })
   }
 }

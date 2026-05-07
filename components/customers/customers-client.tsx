@@ -93,7 +93,7 @@ export function CustomersClient() {
         setCustomers(data.customers)
       }
     } catch (err) {
-      console.error('[pharmasync-track] Fetch customers error:', err)
+      console.error('[v0] Fetch customers error:', err)
     } finally {
       setLoading(false)
     }

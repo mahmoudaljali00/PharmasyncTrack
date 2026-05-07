@@ -21,7 +21,7 @@ export async function POST() {
       user: { email: user.email, name: user.name, role: user.role },
     })
   } catch (error) {
-    console.error('[pharmasync-track] Seed error:', error)
+    console.error('[v0] Seed error:', error)
     return NextResponse.json({ error: 'An error occurred during seeding' }, { status: 500 })
   }
 }

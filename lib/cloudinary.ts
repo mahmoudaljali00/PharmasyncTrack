@@ -66,7 +66,7 @@ export async function deleteCloudinaryAsset(publicId: string): Promise<{ success
     const res = (await cloudinary.uploader.destroy(publicId)) as { result: string }
     return { success: res.result === 'ok' || res.result === 'not found', result: res.result }
   } catch (err) {
-    console.error('[pharmasync-track] Cloudinary delete failed:', err)
+    console.error('[v0] Cloudinary delete failed:', err)
     return { success: false }
   }
 }

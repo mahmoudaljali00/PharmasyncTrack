@@ -241,7 +241,7 @@ export async function logActivity(
       VALUES (${userId}, ${action}, ${details ? JSON.stringify(details) : null}, ${ipAddress}, ${userAgent})
     `
   } catch (error) {
-    console.error('[pharmasync-track] Activity log error:', error)
+    console.error('[v0] Activity log error:', error)
   }
 }
 

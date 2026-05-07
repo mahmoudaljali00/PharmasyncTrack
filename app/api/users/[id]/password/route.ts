@@ -40,7 +40,7 @@ export async function POST(
     const message = error instanceof Error ? error.message : 'Error'
     if (message === 'UNAUTHORIZED') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     if (message === 'FORBIDDEN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    console.error('[pharmasync-track] Password reset error:', error)
+    console.error('[v0] Password reset error:', error)
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
   }
 }

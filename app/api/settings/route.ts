@@ -15,7 +15,7 @@ export async function GET() {
     if (err instanceof Error && err.message === 'FORBIDDEN') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
-    console.error('[pharmasync-track] GET /api/settings failed:', err)
+    console.error('[v0] GET /api/settings failed:', err)
     return NextResponse.json({ error: 'Internal error' }, { status: 500 })
   }
 }
@@ -49,7 +49,7 @@ export async function PATCH(request: Request) {
     if (err instanceof Error && err.message === 'FORBIDDEN') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
-    console.error('[pharmasync-track] PATCH /api/settings failed:', err)
+    console.error('[v0] PATCH /api/settings failed:', err)
     return NextResponse.json({ error: 'Failed to update settings' }, { status: 500 })
   }
 }

@@ -33,7 +33,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const message = error instanceof Error ? error.message : 'Error'
     if (message === 'UNAUTHORIZED') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     if (message === 'FORBIDDEN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    console.error('[pharmasync-track] Customer status error:', error)
+    console.error('[v0] Customer status error:', error)
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
   }
 }

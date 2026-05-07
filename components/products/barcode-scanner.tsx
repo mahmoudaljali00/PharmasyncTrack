@@ -6,46 +6,111 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { X, Camera, RefreshCw, Keyboard } from 'lucide-react'
 
+import {
+  BrowserMultiFormatReader,
+  BarcodeFormat,
+  DecodeHintType,
+  NotFoundException,
+} from '@zxing/library'
+
 type BarcodeScannerProps = {
   onScan: (barcode: string) => void
   onClose: () => void
 }
 
-export function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
+export function BarcodeScanner({
+  onScan,
+  onClose,
+}: BarcodeScannerProps) {
   const [error, setError] = useState<string | null>(null)
   const [isInitializing, setIsInitializing] = useState(true)
   const [showManualInput, setShowManualInput] = useState(false)
   const [manualBarcode, setManualBarcode] = useState('')
-  const scannerRef = useRef<{ stop: () => Promise<void>; isScanning?: boolean } | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([])
+  const [selectedDeviceId, setSelectedDeviceId] = useState('')
+
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const scannerRef = useRef<BrowserMultiFormatReader | null>(null)
 
   useEffect(() => {
     let mounted = true
 
     const initScanner = async () => {
-      if (!containerRef.current || showManualInput) return
+      if (showManualInput) return
 
       try {
-        // Dynamic import to avoid SSR issues
-        const { Html5Qrcode } = await import('html5-qrcode')
-        const scanner = new Html5Qrcode('barcode-reader')
+        setIsInitializing(true)
+        setError(null)
+
+        // تحسينات الأداء
+        const hints = new Map()
+
+        hints.set(DecodeHintType.POSSIBLE_FORMATS, [
+          BarcodeFormat.QR_CODE,
+          BarcodeFormat.CODE_128,
+          BarcodeFormat.CODE_39,
+          BarcodeFormat.EAN_13,
+          BarcodeFormat.EAN_8,
+          BarcodeFormat.UPC_A,
+          BarcodeFormat.UPC_E,
+          BarcodeFormat.ITF,
+          BarcodeFormat.UPC_A,
+          BarcodeFormat.UPC_E,
+          BarcodeFormat.CODABAR,
+          BarcodeFormat.DATA_MATRIX
+        ])
+
+        // مهم جدًا للسرعة
+        hints.set(DecodeHintType.TRY_HARDER, false)
+
+        const scanner = new BrowserMultiFormatReader(hints, 500)
+
         scannerRef.current = scanner
 
-        await scanner.start(
-          { facingMode: 'environment' },
-          {
-            fps: 10,
-            qrbox: { width: 250, height: 100 },
-            aspectRatio: 1.777778,
-          },
-          (decodedText) => {
-            if (mounted) {
-              onScan(decodedText)
-              scanner.stop()
+        // جلب الكاميرات
+        const videoInputDevices =
+          await scanner.listVideoInputDevices()
+
+        if (!mounted) return
+
+        setDevices(videoInputDevices)
+
+        // اختيار الكاميرا الخلفية تلقائيًا
+        const backCamera =
+          videoInputDevices.find((device) =>
+            device.label.toLowerCase().includes('back')
+          ) ||
+          videoInputDevices.find((device) =>
+            device.label.toLowerCase().includes('rear')
+          ) ||
+          videoInputDevices[0]
+
+        if (!backCamera) {
+          throw new Error('No camera found')
+        }
+
+        setSelectedDeviceId(backCamera.deviceId)
+
+        // تشغيل السكانر
+        await scanner.decodeFromVideoDevice(
+          backCamera.deviceId,
+          videoRef.current!,
+          (result, err) => {
+            if (result) {
+              const text = result.getText()
+
+              navigator.vibrate?.(100)
+
+              onScan(text)
             }
-          },
-          () => {
-            // QR code not found - ignore
+
+            // تجاهل الأخطاء الطبيعية
+            if (
+              err &&
+              !(err instanceof NotFoundException)
+            ) {
+              console.error(err)
+            }
           }
         )
 
@@ -53,11 +118,14 @@ export function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
           setIsInitializing(false)
         }
       } catch (err) {
-        console.error('[pharmasync-track] Scanner error:', err)
+        console.error('[ZXING ERROR]', err)
+
         if (mounted) {
-          setError('Camera not available. Use manual entry instead.')
-          setIsInitializing(false)
+          setError(
+            'Camera not available. Use manual entry instead.'
+          )
           setShowManualInput(true)
+          setIsInitializing(false)
         }
       }
     }
@@ -66,35 +134,70 @@ export function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
 
     return () => {
       mounted = false
-      if (scannerRef.current?.isScanning) {
-        scannerRef.current.stop().catch(console.error)
-      }
+      scannerRef.current?.reset()
     }
   }, [onScan, showManualInput])
 
-  const handleRetry = async () => {
-    setError(null)
-    setIsInitializing(true)
-    setShowManualInput(false)
-    if (scannerRef.current?.isScanning) {
-      await scannerRef.current.stop().catch(console.error)
+  // تغيير الكاميرا
+  const handleChangeCamera = async (
+    deviceId: string
+  ) => {
+    try {
+      if (!scannerRef.current || !videoRef.current) return
+
+      scannerRef.current.reset()
+
+      setSelectedDeviceId(deviceId)
+
+      await scannerRef.current.decodeFromVideoDevice(
+        deviceId,
+        videoRef.current,
+        (result, err) => {
+          if (result) {
+            const text = result.getText()
+
+            navigator.vibrate?.(100)
+
+            onScan(text)
+          }
+
+          if (
+            err &&
+            !(err instanceof NotFoundException)
+          ) {
+            console.error(err)
+          }
+        }
+      )
+    } catch (err) {
+      console.error(err)
     }
   }
 
-  const handleManualSubmit = (e: React.FormEvent) => {
+  const handleRetry = async () => {
+    scannerRef.current?.reset()
+
+    setError(null)
+    setShowManualInput(false)
+    setIsInitializing(true)
+  }
+
+  const switchToManual = () => {
+    scannerRef.current?.reset()
+
+    setShowManualInput(true)
+    setError(null)
+    setIsInitializing(false)
+  }
+
+  const handleManualSubmit = (
+    e: React.FormEvent
+  ) => {
     e.preventDefault()
+
     if (manualBarcode.trim()) {
       onScan(manualBarcode.trim())
     }
-  }
-
-  const switchToManual = async () => {
-    if (scannerRef.current?.isScanning) {
-      await scannerRef.current.stop().catch(console.error)
-    }
-    setShowManualInput(true)
-    setIsInitializing(false)
-    setError(null)
   }
 
   return (
@@ -114,25 +217,49 @@ export function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
               </>
             )}
           </CardTitle>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              scannerRef.current?.reset()
+              onClose()
+            }}
+          >
             <X className="h-4 w-4" />
           </Button>
         </CardHeader>
+
         <CardContent>
           {showManualInput ? (
-            <form onSubmit={handleManualSubmit} className="space-y-4">
+            <form
+              onSubmit={handleManualSubmit}
+              className="space-y-4"
+            >
               <Input
                 type="text"
                 placeholder="Enter barcode number..."
                 value={manualBarcode}
-                onChange={(e) => setManualBarcode(e.target.value)}
+                onChange={(e) =>
+                  setManualBarcode(e.target.value)
+                }
                 autoFocus
               />
+
               <div className="flex gap-2">
-                <Button type="submit" className="flex-1" disabled={!manualBarcode.trim()}>
+                <Button
+                  type="submit"
+                  className="flex-1"
+                  disabled={!manualBarcode.trim()}
+                >
                   Submit
                 </Button>
-                <Button type="button" variant="outline" onClick={handleRetry}>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleRetry}
+                >
                   <Camera className="h-4 w-4 me-2" />
                   Try Camera
                 </Button>
@@ -140,12 +267,19 @@ export function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
             </form>
           ) : error ? (
             <div className="text-center py-8">
-              <p className="text-destructive mb-4">{error}</p>
+              <p className="text-destructive mb-4">
+                {error}
+              </p>
+
               <div className="flex gap-2 justify-center">
-                <Button onClick={handleRetry} variant="outline">
+                <Button
+                  onClick={handleRetry}
+                  variant="outline"
+                >
                   <RefreshCw className="h-4 w-4 me-2" />
                   Retry Camera
                 </Button>
+
                 <Button onClick={switchToManual}>
                   <Keyboard className="h-4 w-4 me-2" />
                   Manual Entry
@@ -153,24 +287,59 @@ export function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
               </div>
             </div>
           ) : (
-            <div ref={containerRef}>
-              <div 
-                id="barcode-reader" 
-                className="w-full overflow-hidden rounded-lg bg-muted min-h-[200px]"
-              />
+            <div>
+              {/* اختيار الكاميرا */}
+              {devices.length > 1 && (
+                <select
+                  value={selectedDeviceId}
+                  onChange={(e) =>
+                    handleChangeCamera(
+                      e.target.value
+                    )
+                  }
+                  className="w-full mb-4 border rounded-md p-2"
+                >
+                  {devices.map((device) => (
+                    <option
+                      key={device.deviceId}
+                      value={device.deviceId}
+                    >
+                      {device.label || 'Camera'}
+                    </option>
+                  ))}
+                </select>
+              )}
+
+              {/* الفيديو */}
+              <div className="relative overflow-hidden rounded-lg bg-black">
+                <video
+                  ref={videoRef}
+                  className="w-full h-auto"
+                  muted
+                  playsInline
+                />
+
+                {/* إطار المسح */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="w-[80%] h-[120px] border-4 border-red-500 rounded-xl" />
+                </div>
+              </div>
+
               {isInitializing && (
-                <div className="flex justify-center py-8">
+                <div className="flex justify-center py-6">
                   <div className="animate-pulse text-muted-foreground">
                     Initializing camera...
                   </div>
                 </div>
               )}
+
               <p className="text-sm text-muted-foreground text-center mt-4">
-                Point your camera at a barcode to scan
+                Point your camera at a barcode
               </p>
-              <Button 
-                variant="link" 
-                className="w-full mt-2" 
+
+              <Button
+                variant="link"
+                className="w-full mt-2"
                 onClick={switchToManual}
               >
                 <Keyboard className="h-4 w-4 me-2" />

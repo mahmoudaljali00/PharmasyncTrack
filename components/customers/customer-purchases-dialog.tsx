@@ -56,7 +56,7 @@ export function CustomerPurchasesDialog({ open, onOpenChange, customer }: Props)
           setSales(data.sales)
         }
       } catch (err) {
-        console.error('[pharmasync-track] Fetch customer purchases error:', err)
+        console.error('[v0] Fetch customer purchases error:', err)
       } finally {
         setLoading(false)
       }

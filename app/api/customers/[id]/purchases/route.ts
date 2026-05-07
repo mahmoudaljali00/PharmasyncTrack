@@ -30,7 +30,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     const message = error instanceof Error ? error.message : 'Error'
     if (message === 'UNAUTHORIZED') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     if (message === 'FORBIDDEN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    console.error('[pharmasync-track] Customer purchases error:', error)
+    console.error('[v0] Customer purchases error:', error)
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
   }
 }

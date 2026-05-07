@@ -57,7 +57,7 @@ export function CameraScanner({ onScan, onClose }: Props) {
 
         if (mounted) setInitializing(false)
       } catch (err) {
-        console.error('[pharmasync-track] Camera init failed:', err)
+        console.error('[v0] Camera init failed:', err)
         if (mounted) {
           setError(t('scannerCameraNotAvailable'))
           setInitializing(false)
