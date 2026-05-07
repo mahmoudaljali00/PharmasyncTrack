@@ -46,18 +46,9 @@ export function BarcodeScanner({
         const hints = new Map()
 
         hints.set(DecodeHintType.POSSIBLE_FORMATS, [
-          BarcodeFormat.QR_CODE,
           BarcodeFormat.CODE_128,
-          BarcodeFormat.CODE_39,
           BarcodeFormat.EAN_13,
-          BarcodeFormat.EAN_8,
-          BarcodeFormat.UPC_A,
-          BarcodeFormat.UPC_E,
-          BarcodeFormat.ITF,
-          BarcodeFormat.UPC_A,
-          BarcodeFormat.UPC_E,
-          BarcodeFormat.CODABAR,
-          BarcodeFormat.DATA_MATRIX
+          BarcodeFormat.QR_CODE
         ])
 
         // مهم جدًا للسرعة
